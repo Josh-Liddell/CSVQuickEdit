@@ -1,4 +1,4 @@
-from PyQt5.QtGui import * # not best practice 
+from PyQt5.QtGui import * # Fix import
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 import sys
@@ -10,11 +10,35 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__(*args,**kwargs) 
 
         self.setWindowTitle("Text File Analyzer")
-        self.setFixedSize(QSize(700, 450)) 
-        label = QLabel("Please select a file for analysis")
-        label.setAlignment(Qt.AlignCenter)
+        self.setFixedSize(QSize(700, 450))
 
-        self.setCentralWidget(label)
+        layout = QVBoxLayout()
+
+        label = QLabel("Please select a file for analysis")
+
+        fileselect = QPushButton("Browse Files")
+        fileselect.setFixedSize(150, 30)
+
+
+
+
+
+
+
+        # IN progress
+
+        # Layout
+        layout.addStretch()
+        layout.addWidget(label, alignment=Qt.AlignCenter)
+        layout.addWidget(fileselect, alignment=Qt.AlignCenter)
+        layout.addStretch()
+
+        # Container widget to set the layout
+        container = QWidget()
+        container.setLayout(layout)
+
+        # Set the container widget as the central widget
+        self.setCentralWidget(container)
 
 
 
