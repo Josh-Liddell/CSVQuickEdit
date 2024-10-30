@@ -18,7 +18,7 @@ class MainWindow(QMainWindow):
         self.mainwidget = QStackedWidget()
         self.setCentralWidget(self.mainwidget)
 
-        # Creates the page and adds them to the stacke widget second page will be added after contents recieved
+        # Creates the page and adds them to the stacked widget second page will be added after contents recieved
         self.firstPageSetup()
 
         # Initially show the first page
@@ -72,7 +72,15 @@ class MainWindow(QMainWindow):
 
     def secondPageSetup(self):
         
-        label = QLabel(f"There are {fa.wordCount(self.content)} words in your file")
+        wordCt = fa.wordCount(self.content)
+        charCt = fa.numCharacters(self.content)
+        populrWrds = fa.mostPopular(self.content)
+        
+        label = QLabel(f"""Words in file: {wordCt}
+Characters in file: {charCt}\n
+Most frequent word: {populrWrds[0][0]} ({populrWrds[0][1]} occurences)
+Second most frequent word: {populrWrds[1][0]} ({populrWrds[1][1]} occurences)
+Third most frequent word: {populrWrds[2][0]} ({populrWrds[2][1]} occurences)""")
         button = QPushButton("Go back")
         button.clicked.connect(self.backButtonClicked)
 
@@ -104,12 +112,12 @@ class MainWindow(QMainWindow):
             
         self.secondPageSetup()
         self.mainwidget.setCurrentIndex(1)
-        print("analyzing... Here is the file content: ")
-        print(self.content)
+        # print("analyzing... Here is the file content: ")
+        # print(self.content)
     
     def backButtonClicked(self):
         self.mainwidget.setCurrentIndex(0)
-        self.mainwidget.removeWidget(self.page2) 
+        self.mainwidget.removeWidget(self.page2) # deletes 2nd page when you go back to home 
 
     def closeEvent(self, event):
         print("Application closed")
