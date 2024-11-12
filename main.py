@@ -11,9 +11,9 @@ class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args,**kwargs) 
 
-        self.setWindowTitle("CSV File Quick Edit")
-        # self.setFixedSize(QSize(700, 450))
-        self.resize(QSize(1000, 600))
+        self.setWindowTitle("CSV Quick Edit")
+        self.setFixedSize(QSize(1000, 600))
+        # self.resize(QSize(1000, 600))
 
         # USE a STACKED WIDGET because it will allow me to switch between pages (widgets)
         self.mainwidget = QStackedWidget()
@@ -73,21 +73,30 @@ class MainWindow(QMainWindow):
 
     def secondPageSetup(self):
         
-        wordCt = fa.wordCount(self.content)
-        charCt = fa.numCharacters(self.content)
-        populrWrds = fa.mostPopular(self.content)
+#         wordCt = fa.wordCount(self.content)
+#         charCt = fa.numCharacters(self.content)
+#         populrWrds = fa.mostPopular(self.content)
         
-        label = QLabel(f"""Words in file: {wordCt}
-Characters in file: {charCt}\n
-Most frequent word: {populrWrds[0][0]} ({populrWrds[0][1]} occurences)
-Second most frequent word: {populrWrds[1][0]} ({populrWrds[1][1]} occurences)
-Third most frequent word: {populrWrds[2][0]} ({populrWrds[2][1]} occurences)""")
+#         label = QLabel(f"""Words in file: {wordCt}
+# Characters in file: {charCt}\n
+# Most frequent word: {populrWrds[0][0]} ({populrWrds[0][1]} occurences)
+# Second most frequent word: {populrWrds[1][0]} ({populrWrds[1][1]} occurences)
+# Third most frequent word: {populrWrds[2][0]} ({populrWrds[2][1]} occurences)""")
+        
+        table = QTableWidget(10,10)
+        table.resizeColumnsToContents()
+        table.resizeRowsToContents()
+        table.setMinimumSize(900, 500)
+        table.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        
         button = QPushButton("Go back")
         button.clicked.connect(self.backButtonClicked)
 
 
+
         layout = QVBoxLayout() 
-        layout.addWidget(label, alignment=Qt.AlignCenter)
+        # layout.addWidget(label, alignment=Qt.AlignCenter)
+        layout.addWidget(table, alignment=Qt.AlignCenter)
         layout.addWidget(button, alignment=Qt.AlignCenter)
         
         self.page2 = QWidget()
@@ -99,9 +108,11 @@ Third most frequent word: {populrWrds[2][0]} ({populrWrds[2][1]} occurences)""")
         print("Button clicked!")
         self.file_path, _ = QFileDialog.getOpenFileName(self, "Open File", os.path.expanduser("~/Downloads"), "CSV Files (*.csv)")
         if self.file_path:
-            self.label.setText("File successfully loaded")
-            self.fileselect.setText("Select different file")
-            self.label.setStyleSheet("color: green;") 
+            self.secondPageSetup()
+            self.mainwidget.setCurrentIndex(1)
+            # self.label.setText("File successfully loaded")
+            # self.fileselect.setText("Select different file")
+            # self.label.setStyleSheet("color: green;") 
             # self.analyze.setText(f"Analyze {os.path.basename(self.file_path)}")
             # self.analyze.setVisible(True)
         else:
@@ -111,8 +122,6 @@ Third most frequent word: {populrWrds[2][0]} ({populrWrds[2][1]} occurences)""")
         userfile = open(self.file_path, 'r')
         self.content = userfile.read()
             
-        self.secondPageSetup()
-        self.mainwidget.setCurrentIndex(1)
         # print("analyzing... Here is the file content: ")
         # print(self.content)
     
