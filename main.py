@@ -11,8 +11,9 @@ class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args,**kwargs) 
 
-        self.setWindowTitle("Text File Analyzer")
-        self.setFixedSize(QSize(700, 450))
+        self.setWindowTitle("CSV File Quick Edit")
+        # self.setFixedSize(QSize(700, 450))
+        self.resize(QSize(1000, 600))
 
         # USE a STACKED WIDGET because it will allow me to switch between pages (widgets)
         self.mainwidget = QStackedWidget()
@@ -27,7 +28,7 @@ class MainWindow(QMainWindow):
 
     def firstPageSetup(self):
         # Widgets
-        self.label = QLabel("Please select a text file for analysis")
+        self.label = QLabel("Please select a CSV file to edit")
         font = QFont()
         font.setPointSize(18)
         self.label.setFont(font)
@@ -36,23 +37,23 @@ class MainWindow(QMainWindow):
         self.fileselect.clicked.connect(self.startButtonClicked)
         self.fileselect.setFixedSize(150, 30)
         
-        self.analyze = QPushButton("Analyze File")
-        self.analyze.clicked.connect(self.analyzeButtonClicked)
-        self.analyze.setFixedSize(150, 30)
-        self.analyze.setStyleSheet("""
-                    QPushButton {
-                        background-color: #0056b3; 
-                        color: white; 
-                        border: 1px solid transparent; /* Keeps the original border */
-                        border-radius: 5px; /* Adjust this value for rounded corners */
-                        padding: 5px; /* Add some padding for size consistency */
-                    }
-                    QPushButton:hover {
-                        background-color: #0056b3; /* Darker blue on hover */
-                    }
-                """)
+        # self.analyze = QPushButton("Analyze File")
+        # self.analyze.clicked.connect(self.analyzeButtonClicked)
+        # self.analyze.setFixedSize(150, 30)
+        # self.analyze.setStyleSheet("""
+        #             QPushButton {
+        #                 background-color: #0056b3; 
+        #                 color: white; 
+        #                 border: 1px solid transparent; /* Keeps the original border */
+        #                 border-radius: 5px; /* Adjust this value for rounded corners */
+        #                 padding: 5px; /* Add some padding for size consistency */
+        #             }
+        #             QPushButton:hover {
+        #                 background-color: #0056b3; /* Darker blue on hover */
+        #             }
+        #         """)
 
-        self.analyze.setVisible(False)
+        # self.analyze.setVisible(False)
 
 
         # Layout
@@ -60,7 +61,7 @@ class MainWindow(QMainWindow):
         layout.addStretch()
         layout.addWidget(self.label, alignment=Qt.AlignCenter)
         layout.addWidget(self.fileselect, alignment=Qt.AlignCenter)
-        layout.addWidget(self.analyze, alignment=Qt.AlignCenter)
+        # layout.addWidget(self.analyze, alignment=Qt.AlignCenter)
         layout.addStretch()
 
         # Adding the layout(with the widgets) to a page1 widget
@@ -96,13 +97,13 @@ Third most frequent word: {populrWrds[2][0]} ({populrWrds[2][1]} occurences)""")
 
     def startButtonClicked(self):
         print("Button clicked!")
-        self.file_path, _ = QFileDialog.getOpenFileName(self, "Open File", os.path.expanduser("~/Downloads"), "Text Files (*.txt)")
+        self.file_path, _ = QFileDialog.getOpenFileName(self, "Open File", os.path.expanduser("~/Downloads"), "CSV Files (*.csv)")
         if self.file_path:
             self.label.setText("File successfully loaded")
             self.fileselect.setText("Select different file")
             self.label.setStyleSheet("color: green;") 
-            self.analyze.setText(f"Analyze {os.path.basename(self.file_path)}")
-            self.analyze.setVisible(True)
+            # self.analyze.setText(f"Analyze {os.path.basename(self.file_path)}")
+            # self.analyze.setVisible(True)
         else:
             print("Failed to find filepath")
         
