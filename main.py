@@ -4,6 +4,7 @@ from PyQt5.QtCore import *
 import sys
 import os
 import fileanalysis as fa
+import pandas as pd
 
 
 class MainWindow(QMainWindow):
@@ -15,7 +16,7 @@ class MainWindow(QMainWindow):
         self.setFixedSize(QSize(1000, 600))
         # self.resize(QSize(1000, 600))
 
-        # USE a STACKED WIDGET because it will allow me to switch between pages (widgets)
+        # Stacked widget allows to switch between pages (widgets)
         self.mainwidget = QStackedWidget()
         self.setCentralWidget(self.mainwidget)
 
@@ -37,25 +38,6 @@ class MainWindow(QMainWindow):
         self.fileselect.clicked.connect(self.startButtonClicked)
         self.fileselect.setFixedSize(150, 30)
         
-        # self.analyze = QPushButton("Analyze File")
-        # self.analyze.clicked.connect(self.analyzeButtonClicked)
-        # self.analyze.setFixedSize(150, 30)
-        # self.analyze.setStyleSheet("""
-        #             QPushButton {
-        #                 background-color: #0056b3; 
-        #                 color: white; 
-        #                 border: 1px solid transparent; /* Keeps the original border */
-        #                 border-radius: 5px; /* Adjust this value for rounded corners */
-        #                 padding: 5px; /* Add some padding for size consistency */
-        #             }
-        #             QPushButton:hover {
-        #                 background-color: #0056b3; /* Darker blue on hover */
-        #             }
-        #         """)
-
-        # self.analyze.setVisible(False)
-
-
         # Layout
         layout = QVBoxLayout()
         layout.addStretch()
@@ -71,17 +53,8 @@ class MainWindow(QMainWindow):
         # Adding the page 1 widget to the main stacked widget
         self.mainwidget.addWidget(page1)
 
+
     def secondPageSetup(self):
-        
-#         wordCt = fa.wordCount(self.content)
-#         charCt = fa.numCharacters(self.content)
-#         populrWrds = fa.mostPopular(self.content)
-        
-#         label = QLabel(f"""Words in file: {wordCt}
-# Characters in file: {charCt}\n
-# Most frequent word: {populrWrds[0][0]} ({populrWrds[0][1]} occurences)
-# Second most frequent word: {populrWrds[1][0]} ({populrWrds[1][1]} occurences)
-# Third most frequent word: {populrWrds[2][0]} ({populrWrds[2][1]} occurences)""")
         
         table = QTableWidget(10,10)
         table.resizeColumnsToContents()
@@ -95,7 +68,6 @@ class MainWindow(QMainWindow):
 
 
         layout = QVBoxLayout() 
-        # layout.addWidget(label, alignment=Qt.AlignCenter)
         layout.addWidget(table, alignment=Qt.AlignCenter)
         layout.addWidget(button, alignment=Qt.AlignCenter)
         
@@ -108,26 +80,25 @@ class MainWindow(QMainWindow):
         print("Button clicked!")
         self.file_path, _ = QFileDialog.getOpenFileName(self, "Open File", os.path.expanduser("~/Downloads"), "CSV Files (*.csv)")
         if self.file_path:
+            
+            # Create the pandas dataframe
+            df = pd.read_csv(self.file_path)
+            print(df)
+            # Run the file analysis page setup and conduct analysis using the df
+            # Runs the second page setup (inserts df into the qtable)
+            
+            
             self.secondPageSetup()
             self.mainwidget.setCurrentIndex(1)
-            # self.label.setText("File successfully loaded")
-            # self.fileselect.setText("Select different file")
-            # self.label.setStyleSheet("color: green;") 
-            # self.analyze.setText(f"Analyze {os.path.basename(self.file_path)}")
-            # self.analyze.setVisible(True)
+
         else:
             print("Failed to find filepath")
-        
-    def analyzeButtonClicked(self):
-        userfile = open(self.file_path, 'r')
-        self.content = userfile.read()
-            
-        # print("analyzing... Here is the file content: ")
-        # print(self.content)
-    
+
+
     def backButtonClicked(self):
         self.mainwidget.setCurrentIndex(0)
         self.mainwidget.removeWidget(self.page2) # deletes 2nd page when you go back to home 
+
 
     def closeEvent(self, event):
         print("Application closed")
@@ -136,10 +107,9 @@ class MainWindow(QMainWindow):
 
 
 #Create and start the app
-
 app = QApplication(sys.argv)
-
 window = MainWindow()
-window.show() # IMPORTANT
+window.show()
 
-app.exec_() # starts event loop. Using _ because exec is keyword
+# starts event loop. Using _ because exec is keyword
+app.exec_() 
