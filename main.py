@@ -1,4 +1,4 @@
-from PyQt5.QtGui import * # Fix import
+from PyQt5.QtGui import * 
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 import sys
@@ -56,21 +56,37 @@ class MainWindow(QMainWindow):
 
     def secondPageSetup(self):
         
-        table = QTableWidget(10,10)
+        table = QTableWidget()
         table.resizeColumnsToContents()
         table.resizeRowsToContents()
         table.setMinimumSize(900, 500)
         table.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        
+        table.setRowCount(self.df.shape[0])
+        table.setColumnCount(self.df.shape[1]) 
+        for row in range(self.df.shape[0]):
+            for col in range(self.df.shape[1]):
+                table.setItem(row, col, QTableWidgetItem(str(self.df.iat[row, col])))
+
+        def updateDataframe(row, col):
+            newValue = table.item(row, col).text()
+            self.df.iat[row, col] = newValue
+
+        table.cellChanged.connect(updateDataframe)
+
         button = QPushButton("Go back")
+        button2 = QPushButton("Save & Exit")
         button.clicked.connect(self.backButtonClicked)
-
-
+        button2.clicked.connect(self.saveButtonClicked)
 
         layout = QVBoxLayout() 
         layout.addWidget(table, alignment=Qt.AlignCenter)
-        layout.addWidget(button, alignment=Qt.AlignCenter)
-        
+
+        buttonLayout = QHBoxLayout()
+        buttonLayout.addWidget(button)
+        buttonLayout.addWidget(button2)
+
+        layout.addLayout(buttonLayout)
+
         self.page2 = QWidget()
         self.page2.setLayout(layout)
         self.mainwidget.addWidget(self.page2)
@@ -82,11 +98,9 @@ class MainWindow(QMainWindow):
         if self.file_path:
             
             # Create the pandas dataframe
-            df = pd.read_csv(self.file_path)
-            print(df)
-            # Run the file analysis page setup and conduct analysis using the df
-            # Runs the second page setup (inserts df into the qtable)
+            self.df = pd.read_csv(self.file_path, dtype="object")
             
+            # Here run the file analysis page setup and conduct analysis using the df
             
             self.secondPageSetup()
             self.mainwidget.setCurrentIndex(1)
@@ -100,8 +114,15 @@ class MainWindow(QMainWindow):
         self.mainwidget.removeWidget(self.page2) # deletes 2nd page when you go back to home 
 
 
+    def saveButtonClicked(self):
+        self.df.to_csv(self.file_path, index=False)
+        QApplication.quit()
+
+
+
     def closeEvent(self, event):
         print("Application closed")
+        print(self.df)
         event.accept()
         
 
