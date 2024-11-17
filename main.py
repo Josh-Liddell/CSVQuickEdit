@@ -29,20 +29,20 @@ class MainWindow(QMainWindow):
 
     def firstPageSetup(self):
         # Widgets
-        self.label = QLabel("Please select a CSV file to edit")
+        label = QLabel("Please select a CSV file to edit")
         font = QFont()
         font.setPointSize(18)
-        self.label.setFont(font)
+        label.setFont(font)
 
-        self.fileselect = QPushButton("Browse Files")
-        self.fileselect.clicked.connect(self.startButtonClicked)
-        self.fileselect.setFixedSize(150, 30)
+        fileselect = QPushButton("Browse Files")
+        fileselect.clicked.connect(self.startButtonClicked)
+        fileselect.setFixedSize(150, 30)
         
         # Layout
         layout = QVBoxLayout()
         layout.addStretch()
-        layout.addWidget(self.label, alignment=Qt.AlignCenter)
-        layout.addWidget(self.fileselect, alignment=Qt.AlignCenter)
+        layout.addWidget(label, alignment=Qt.AlignCenter)
+        layout.addWidget(fileselect, alignment=Qt.AlignCenter)
         # layout.addWidget(self.analyze, alignment=Qt.AlignCenter)
         layout.addStretch()
 
@@ -74,26 +74,50 @@ class MainWindow(QMainWindow):
         table.cellChanged.connect(updateDataframe)
 
         button = QPushButton("Go back")
-        button2 = QPushButton("Save & Exit")
+        button2 = QPushButton("Save and Exit")
+        button3 = QPushButton("File Analysis")
         button.clicked.connect(self.backButtonClicked)
         button2.clicked.connect(self.saveButtonClicked)
+        button3.clicked.connect(self.analysisButtonClicked)
+        button.setMaximumWidth(180)
+        button2.setMaximumWidth(180)
+        button3.setMaximumWidth(180)
 
         layout = QVBoxLayout() 
         layout.addWidget(table, alignment=Qt.AlignCenter)
 
         buttonLayout = QHBoxLayout()
+        buttonLayout.addStretch(4)
         buttonLayout.addWidget(button)
+        buttonLayout.addStretch(1)
+        buttonLayout.addWidget(button3)
+        buttonLayout.addStretch(1)
         buttonLayout.addWidget(button2)
+        buttonLayout.addStretch(4)
 
         layout.addLayout(buttonLayout)
 
         self.page2 = QWidget()
         self.page2.setLayout(layout)
         self.mainwidget.addWidget(self.page2)
+    
+
+    def thirdPageSetup(self):
+
+        label = QLabel(f"There are {fa.numCells(self.df)} cells in the file")
+        button = QPushButton("Back")
+        button.clicked.connect(self.back2Clicked)
+        layout = QVBoxLayout()
+        layout.addWidget(label, alignment=Qt.AlignCenter)
+        layout.addWidget(button, alignment=Qt.AlignCenter)
+        
+        
+        self.page3 = QWidget()
+        self.page3.setLayout(layout)
+        self.mainwidget.addWidget(self.page3)
 
 
     def startButtonClicked(self):
-        print("Button clicked!")
         self.file_path, _ = QFileDialog.getOpenFileName(self, "Open File", os.path.expanduser("~/Downloads"), "CSV Files (*.csv)")
         if self.file_path:
             
@@ -111,8 +135,16 @@ class MainWindow(QMainWindow):
 
     def backButtonClicked(self):
         self.mainwidget.setCurrentIndex(0)
-        self.mainwidget.removeWidget(self.page2) # deletes 2nd page when you go back to home 
+        self.mainwidget.removeWidget(self.page2) # deletes 2nd page when you go back to home
 
+    def back2Clicked(self):
+        self.mainwidget.setCurrentIndex(1)
+        self.mainwidget.removeWidget(self.page3)
+
+
+    def analysisButtonClicked(self):
+        self.thirdPageSetup()
+        self.mainwidget.setCurrentIndex(2)
 
     def saveButtonClicked(self):
         self.df.to_csv(self.file_path, index=False)
