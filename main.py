@@ -13,8 +13,8 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__(*args,**kwargs) 
 
         self.setWindowTitle("CSV Quick Edit")
-        self.setFixedSize(QSize(1000, 600))
-        # self.resize(QSize(1000, 600))
+        # self.setFixedSize(QSize(1000, 600))
+        self.resize(QSize(1000, 600))
 
         # Stacked widget allows to switch between pages (widgets)
         self.mainwidget = QStackedWidget()
@@ -29,25 +29,39 @@ class MainWindow(QMainWindow):
 
     def firstPageSetup(self):
         # Widgets
-        label = QLabel("Please select a CSV file to edit")
+        label = QLabel("Select a CSV file to edit")
         font = QFont()
-        font.setPointSize(18)
+        font.setPointSize(26)
         label.setFont(font)
 
         fileselect = QPushButton("Browse Files")
         fileselect.clicked.connect(self.startButtonClicked)
         fileselect.setFixedSize(150, 30)
+        fileselect.setStyleSheet("""
+        QPushButton {
+            background-color: #007bff; 
+            border-radius: 15px; 
+        }
+        QPushButton:hover {
+            background-color: #6bbfef;
+        }
+        QPushButton:pressed {
+            background-color: #6bbfef;
+        }
+    """)
         
         # Layout
         layout = QVBoxLayout()
-        layout.addStretch()
+        layout.addStretch(10)
         layout.addWidget(label, alignment=Qt.AlignCenter)
+        layout.addStretch(1)
         layout.addWidget(fileselect, alignment=Qt.AlignCenter)
         # layout.addWidget(self.analyze, alignment=Qt.AlignCenter)
-        layout.addStretch()
+        layout.addStretch(10)
 
         # Adding the layout(with the widgets) to a page1 widget
         page1 = QWidget()
+        # page1.setStyleSheet("QWidget { background-color: lightblue; }")
         page1.setLayout(layout)
 
         # Adding the page 1 widget to the main stacked widget
@@ -63,10 +77,20 @@ class MainWindow(QMainWindow):
         table.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         table.setRowCount(self.df.shape[0])
         table.setColumnCount(self.df.shape[1]) 
+        table.setHorizontalHeaderLabels(self.df.columns.tolist())
+        table.setStyleSheet("""
+                QTableWidget {
+                    background-color: #4c6b7f;
+                    color: white;
+                    gridline-color: white;
+                }""") 
+
+        # Populate Table
         for row in range(self.df.shape[0]):
             for col in range(self.df.shape[1]):
                 table.setItem(row, col, QTableWidgetItem(str(self.df.iat[row, col])))
 
+        # Updates the dataframe with any changes made
         def updateDataframe(row, col):
             newValue = table.item(row, col).text()
             self.df.iat[row, col] = newValue
@@ -154,7 +178,6 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, event):
         print("Application closed")
-        print(self.df)
         event.accept()
         
 
