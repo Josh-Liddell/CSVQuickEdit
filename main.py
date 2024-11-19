@@ -127,8 +127,8 @@ class MainWindow(QMainWindow):
     
 
     def thirdPageSetup(self):
-
-        label = QLabel(f"There are {fa.numCells(self.df)} cells in the file")
+        top3 = fa.mostPopular(self.df)
+        label = QLabel(f"""There are {fa.numCells(self.df)} cells in the file\n\nMost freqent cell values: \"{top3[0][0]}\" with {top3[0][1]} occurences, \"{top3[1][0]}\" with {top3[1][1]} occurences, \"{top3[2][0]}\" with {top3[2][1]} occurences.""")
         button = QPushButton("Back")
         button.clicked.connect(self.back2Clicked)
         layout = QVBoxLayout()
