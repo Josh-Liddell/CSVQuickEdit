@@ -80,7 +80,7 @@ class MainWindow(QMainWindow):
         table.setHorizontalHeaderLabels(self.df.columns.tolist())
         table.setStyleSheet("""
                 QTableWidget {
-                    background-color: #4c6b7f;
+                    /*background-color: #4c6b7f;*/
                     color: white;
                     gridline-color: white;
                 }""") 

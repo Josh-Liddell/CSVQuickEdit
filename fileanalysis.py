@@ -10,6 +10,7 @@ def mostPopular(df):
     wordlist = df.values.flatten().tolist() 
     populrDict = {}
     for word in wordlist:
+        word = str(word)
         word = word.lower()
         if word in populrDict:
             populrDict[word] += 1
