@@ -12,10 +12,11 @@ def mostPopular(df):
     for word in wordlist:
         word = str(word)
         word = word.lower()
-        if word in populrDict:
-            populrDict[word] += 1
-        else:
-            populrDict[word] = 1
+        if word != '':
+            if word in populrDict:
+                populrDict[word] += 1
+            else:
+                populrDict[word] = 1
 
     top3 = []
     for i in range(3):
