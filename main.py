@@ -28,66 +28,14 @@ class MainWindow(QMainWindow):
 
 
     def firstPageSetup(self):
-        page1 = pg.FirstPage()
+        page1 = pg.FirstPage(self)
         self.mainwidget.addWidget(page1)
 
 
     def secondPageSetup(self):
-        
-        table = QTableWidget()
-        table.resizeColumnsToContents()
-        table.resizeRowsToContents()
-        table.setMinimumSize(900, 500)
-        table.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        table.setRowCount(self.df.shape[0])
-        table.setColumnCount(self.df.shape[1]) 
-        table.setHorizontalHeaderLabels(self.df.columns.tolist())
-        table.setStyleSheet("""
-                QTableWidget {
-                    /*background-color: #4c6b7f;*/
-                    color: white;
-                    gridline-color: white;
-                }""") 
-
-        # Populate Table
-        for row in range(self.df.shape[0]):
-            for col in range(self.df.shape[1]):
-                table.setItem(row, col, QTableWidgetItem(str(self.df.iat[row, col])))
-
-        # Updates the dataframe with any changes made
-        def updateDataframe(row, col):
-            newValue = table.item(row, col).text()
-            self.df.iat[row, col] = newValue
-
-        table.cellChanged.connect(updateDataframe)
-
-        button = QPushButton("Go back")
-        button2 = QPushButton("Save and Exit")
-        button3 = QPushButton("File Analysis")
-        button.clicked.connect(self.backButtonClicked)
-        button2.clicked.connect(self.saveButtonClicked)
-        button3.clicked.connect(self.analysisButtonClicked)
-        button.setMaximumWidth(180)
-        button2.setMaximumWidth(180)
-        button3.setMaximumWidth(180)
-
-        layout = QVBoxLayout() 
-        layout.addWidget(table, alignment=Qt.AlignCenter)
-
-        buttonLayout = QHBoxLayout()
-        buttonLayout.addStretch(4)
-        buttonLayout.addWidget(button)
-        buttonLayout.addStretch(1)
-        buttonLayout.addWidget(button3)
-        buttonLayout.addStretch(1)
-        buttonLayout.addWidget(button2)
-        buttonLayout.addStretch(4)
-
-        layout.addLayout(buttonLayout)
-
-        self.page2 = QWidget()
-        self.page2.setLayout(layout)
+        self.page2 = pg.CSVPage(self)
         self.mainwidget.addWidget(self.page2)
+        self.mainwidget.setCurrentIndex(1)
     
 
     def thirdPageSetup(self):
@@ -105,24 +53,9 @@ class MainWindow(QMainWindow):
         self.mainwidget.addWidget(self.page3)
 
 
-    
-    def backButtonClicked(self):
-        self.mainwidget.setCurrentIndex(0)
-        self.mainwidget.removeWidget(self.page2) # deletes 2nd page when you go back to home
-
     def back2Clicked(self):
         self.mainwidget.setCurrentIndex(1)
         self.mainwidget.removeWidget(self.page3)
-
-
-    def analysisButtonClicked(self):
-        self.thirdPageSetup()
-        self.mainwidget.setCurrentIndex(2)
-
-    def saveButtonClicked(self):
-        self.df.to_csv(self.file_path, index=False)
-        QApplication.quit()
-
 
 
     def closeEvent(self, event):

@@ -26,16 +26,6 @@ def mostPopular(df):
     return top3
 
 
-
-
-
-
-
-
-
-
-
-
 # .txt file anaylsis
 
 
@@ -55,5 +45,3 @@ def mostPopular(df):
 #         if x != ' ':
 #             num += 1
 #     return num
-
-
