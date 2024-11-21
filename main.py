@@ -2,9 +2,9 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 import sys
-import os
 import fileanalysis as fa
 import pandas as pd
+import pages as pg
 
 
 class MainWindow(QMainWindow):
@@ -28,43 +28,7 @@ class MainWindow(QMainWindow):
 
 
     def firstPageSetup(self):
-        # Widgets
-        label = QLabel("Select a CSV file to edit")
-        font = QFont()
-        font.setPointSize(26)
-        label.setFont(font)
-
-        fileselect = QPushButton("Browse Files")
-        fileselect.clicked.connect(self.startButtonClicked)
-        fileselect.setFixedSize(150, 30)
-        fileselect.setStyleSheet("""
-        QPushButton {
-            background-color: #007bff; 
-            border-radius: 15px; 
-        }
-        QPushButton:hover {
-            background-color: #6bbfef;
-        }
-        QPushButton:pressed {
-            background-color: #6bbfef;
-        }
-    """)
-        
-        # Layout
-        layout = QVBoxLayout()
-        layout.addStretch(10)
-        layout.addWidget(label, alignment=Qt.AlignCenter)
-        layout.addStretch(1)
-        layout.addWidget(fileselect, alignment=Qt.AlignCenter)
-        # layout.addWidget(self.analyze, alignment=Qt.AlignCenter)
-        layout.addStretch(10)
-
-        # Adding the layout(with the widgets) to a page1 widget
-        page1 = QWidget()
-        # page1.setStyleSheet("QWidget { background-color: lightblue; }")
-        page1.setLayout(layout)
-
-        # Adding the page 1 widget to the main stacked widget
+        page1 = pg.FirstPage()
         self.mainwidget.addWidget(page1)
 
 
@@ -141,23 +105,7 @@ class MainWindow(QMainWindow):
         self.mainwidget.addWidget(self.page3)
 
 
-    def startButtonClicked(self):
-        self.file_path, _ = QFileDialog.getOpenFileName(self, "Open File", os.path.expanduser("~/Downloads"), "CSV Files (*.csv)")
-        if self.file_path:
-            
-            # Create the pandas dataframe
-            self.df = pd.read_csv(self.file_path, dtype="object", keep_default_na=False)
-
-            # Convert NaN to None
-            self.df = self.df.where(pd.notna(self.df), None)
-            
-            self.secondPageSetup()
-            self.mainwidget.setCurrentIndex(1)
-
-        else:
-            print("Failed to find filepath")
-
-
+    
     def backButtonClicked(self):
         self.mainwidget.setCurrentIndex(0)
         self.mainwidget.removeWidget(self.page2) # deletes 2nd page when you go back to home
