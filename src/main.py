@@ -1,16 +1,14 @@
-from PyQt5.QtGui import * 
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
 import sys
-import fileanalysis as fa
-import pandas as pd
+from PyQt5.QtWidgets import QApplication, QMainWindow, QStackedWidget
+from PyQt5.QtCore import QSize
 import pages as pg
+
 
 
 class MainWindow(QMainWindow):
 
     def __init__(self, *args, **kwargs):
-        super(MainWindow, self).__init__(*args,**kwargs) 
+        super().__init__(*args,**kwargs) 
 
         self.setWindowTitle("CSV Quick Edit")
         # self.setFixedSize(QSize(1000, 600))
@@ -20,16 +18,15 @@ class MainWindow(QMainWindow):
         self.mainwidget = QStackedWidget()
         self.setCentralWidget(self.mainwidget)
 
-        # Creates the page and adds them to the stacked widget second page will be added after contents recieved
+        # Creates the page and adds them to the stacked widget, second page will be added after contents recieved
         self.firstPageSetup()
 
-        # Initially show the first page
-        self.mainwidget.setCurrentIndex(0)
 
 
     def firstPageSetup(self):
         page1 = pg.FirstPage(self)
         self.mainwidget.addWidget(page1)
+        self.mainwidget.setCurrentIndex(0)
 
 
     def secondPageSetup(self):
@@ -43,10 +40,9 @@ class MainWindow(QMainWindow):
         self.mainwidget.addWidget(self.page3)
         self.mainwidget.setCurrentIndex(2)
 
-
     
     def closeEvent(self, event):
-        print("Application closed")
+        # print("Application closed")
         event.accept()
         
 

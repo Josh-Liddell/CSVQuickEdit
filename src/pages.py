@@ -5,6 +5,7 @@ import os
 import pandas as pd
 import globaldata as gd
 import fileanalysis as fa
+import styles as st
 
 class FirstPage(QWidget):
     def __init__(self, main_window, *args, **kwargs):
@@ -20,18 +21,7 @@ class FirstPage(QWidget):
         fileselect = QPushButton("Browse Files")
         fileselect.clicked.connect(self.startButtonClicked)
         fileselect.setFixedSize(150, 30)
-        fileselect.setStyleSheet("""
-                    QPushButton {
-                        background-color: #007bff; 
-                        border-radius: 15px; 
-                    }
-                    QPushButton:hover {
-                        background-color: #6bbfef;
-                    }
-                    QPushButton:pressed {
-                        background-color: #6bbfef;
-                    }
-                    """)
+        fileselect.setStyleSheet(st.browseFiles)
         
         # Layout
         layout = QVBoxLayout()
@@ -74,12 +64,7 @@ class CSVPage(QWidget):
         table.setRowCount(gd.df.shape[0])
         table.setColumnCount(gd.df.shape[1]) 
         table.setHorizontalHeaderLabels(gd.df.columns.tolist())
-        table.setStyleSheet("""
-                QTableWidget {
-                    /*background-color: #4c6b7f;*/
-                    color: white;
-                    gridline-color: white;
-                }""") 
+        table.setStyleSheet(st.tableGrid) 
 
         # Populate Table
         for row in range(gd.df.shape[0]):
