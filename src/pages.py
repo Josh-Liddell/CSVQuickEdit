@@ -40,7 +40,7 @@ class FirstPage(QWidget):
         if gd.file_path:
             
             # Create the pandas dataframe
-            gd.df = pd.read_csv(gd.file_path, dtype="object", keep_default_na=False)
+            gd.df = pd.read_csv(gd.file_path, dtype="object", keep_default_na=False, header=None)
 
             # Convert NaN to None
             gd.df = gd.df.where(pd.notna(gd.df), None)
@@ -63,7 +63,7 @@ class CSVPage(QWidget):
         table.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         table.setRowCount(gd.df.shape[0])
         table.setColumnCount(gd.df.shape[1]) 
-        table.setHorizontalHeaderLabels(gd.df.columns.tolist())
+        # table.setHorizontalHeaderLabels(gd.df.columns.tolist())
         table.setStyleSheet(st.tableGrid) 
 
         # Populate Table
@@ -89,7 +89,7 @@ class CSVPage(QWidget):
         button3.setMaximumWidth(180)
 
         layout = QVBoxLayout() 
-        layout.addWidget(table, alignment=Qt.AlignCenter)
+        layout.addWidget(table)
 
         buttonLayout = QHBoxLayout()
         buttonLayout.addStretch(4)
@@ -101,6 +101,7 @@ class CSVPage(QWidget):
         buttonLayout.addStretch(4)
 
         layout.addLayout(buttonLayout)
+        layout.setContentsMargins(0, 0, 0, 15)
         self.setLayout(layout)
 
 
@@ -113,7 +114,7 @@ class CSVPage(QWidget):
         self.main_window.mainwidget.setCurrentIndex(2)
 
     def saveButtonClicked(self):
-        gd.df.to_csv(gd.file_path, index=False)
+        gd.df.to_csv(gd.file_path, index=False, header=None)
         QApplication.quit()
 
 

@@ -1,5 +1,3 @@
-
-
 browseFiles = """
                     QPushButton {
                         background-color: #007bff; 

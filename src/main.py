@@ -2,6 +2,7 @@ import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QStackedWidget
 from PyQt5.QtCore import QSize
 import pages as pg
+import globaldata as gd
 
 
 
@@ -18,15 +19,22 @@ class MainWindow(QMainWindow):
         self.mainwidget = QStackedWidget()
         self.setCentralWidget(self.mainwidget)
 
-        # Creates the page and adds them to the stacked widget, second page will be added after contents recieved
-        self.firstPageSetup()
+        # If they open the app using "open with"
+        if gd.file_path:
+            self.firstPageSetup(mark=1)
+            self.secondPageSetup(gd.file_path)
+        else:
+            self.firstPageSetup()
 
 
 
-    def firstPageSetup(self):
+
+    def firstPageSetup(self, mark=None):
+        # May still need to be adjusted
         page1 = pg.FirstPage(self)
         self.mainwidget.addWidget(page1)
-        self.mainwidget.setCurrentIndex(0)
+        if mark is None:
+            self.mainwidget.setCurrentIndex(0)
 
 
     def secondPageSetup(self):
@@ -49,6 +57,10 @@ class MainWindow(QMainWindow):
 
 #Create and start the app
 app = QApplication(sys.argv)
+
+if len(sys.argv) > 1:
+        gd.file_path = sys.argv[1]
+
 window = MainWindow()
 window.show()
 
