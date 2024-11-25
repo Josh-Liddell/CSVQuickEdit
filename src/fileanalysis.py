@@ -1,6 +1,5 @@
-# import re
-import pandas as pd
-
+def numAxis(df):
+    return df.shape[0], df.shape[1]
 
 def numCells(df):
     return df.size
@@ -24,24 +23,3 @@ def mostPopular(df):
         top3.append((maxname, populrDict[maxname]))
         del populrDict[maxname]
     return top3
-
-
-# .txt file anaylsis
-
-
-# using this function to obtain list of words excluding all possible puctuation varieties
-# def splitSentence(sentence): 
-#     words = re.findall(r'\b\w+\b', sentence)
-#     return words
-
-# def wordCount(contents):
-#     wordlist = contents.split()
-#     return len(wordlist)
-
-# def numCharacters(contents): # not including spaces
-#     num = 0
-#     contents = list(contents)
-#     for x in contents:
-#         if x != ' ':
-#             num += 1
-#     return num

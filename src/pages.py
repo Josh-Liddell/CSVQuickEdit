@@ -12,7 +12,9 @@ class FirstPage(QWidget):
         super().__init__(*args, **kwargs)
 
         self.main_window = main_window
-        
+        self.shortcut = QShortcut(QKeySequence("Ctrl+O"), self)
+        self.shortcut.activated.connect(self.startButtonClicked)
+
         label = QLabel("Select a CSV file to edit")
         font = QFont()
         font.setPointSize(26)
@@ -55,6 +57,10 @@ class CSVPage(QWidget):
     def __init__(self, main_window, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.main_window = main_window
+        self.shortcut = QShortcut(QKeySequence("Ctrl+S"), self)
+        self.shortcut.activated.connect(self.saveButtonClicked)
+        self.shortcut2 = QShortcut(QKeySequence("Ctrl+Z"), self)
+        self.shortcut2.activated.connect(self.backButtonClicked)
 
         table = QTableWidget()
         table.resizeColumnsToContents()
@@ -123,12 +129,21 @@ class AnalysisPage(QWidget):
         super().__init__(*args, **kwargs)
         self.main_window = main_window
 
+        rows, columns = fa.numAxis(gd.df)
+        label1 = QLabel(f"Table has {rows} rows and {columns} columns")
+
         top3 = fa.mostPopular(gd.df)
-        label = QLabel(f"""There are {fa.numCells(gd.df)} cells in the file\n\nMost freqent cell values: \"{top3[0][0]}\" ({top3[0][1]} occurences), \"{top3[1][0]}\" ({top3[1][1]}) occurences, \"{top3[2][0]}\" ({top3[2][1]}) occurences.""")
+        label2 = QLabel(f"There are {fa.numCells(gd.df)} cells in the file")
+        label3 = QLabel(f"Most freqent cell values: \"{top3[0][0]}\" ({top3[0][1]} occurences), \"{top3[1][0]}\" ({top3[1][1]}) occurences, \"{top3[2][0]}\" ({top3[2][1]}) occurences.")
         button = QPushButton("Back")
         button.clicked.connect(self.back2Clicked)
+        
         layout = QVBoxLayout()
-        layout.addWidget(label, alignment=Qt.AlignCenter)
+        layout.addStretch(50)
+        layout.addWidget(label1, alignment=Qt.AlignCenter)
+        layout.addWidget(label2, alignment=Qt.AlignCenter)
+        layout.addWidget(label3, alignment=Qt.AlignCenter)
+        layout.addStretch(50)
         layout.addWidget(button, alignment=Qt.AlignCenter)
         self.setLayout(layout)
         
