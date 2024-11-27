@@ -25,28 +25,19 @@ class FirstPage(QWidget):
         fileselect.setFixedSize(150, 30)
         fileselect.setStyleSheet(st.browseFiles)
         
-        # Layout
         layout = QVBoxLayout()
         layout.addStretch(10)
         layout.addWidget(label, alignment=Qt.AlignCenter)
         layout.addStretch(1)
         layout.addWidget(fileselect, alignment=Qt.AlignCenter)
-        # layout.addWidget(self.analyze, alignment=Qt.AlignCenter)
         layout.addStretch(10)
-
-        # page1.setStyleSheet("QWidget { background-color: lightblue; }")
         self.setLayout(layout)
 
     def startButtonClicked(self):
         gd.file_path, _ = QFileDialog.getOpenFileName(self, "Open File", os.path.expanduser("~/Downloads"), "CSV Files (*.csv)")
         if gd.file_path:
-            
-            # Create the pandas dataframe
             gd.df = pd.read_csv(gd.file_path, dtype="object", keep_default_na=False, header=None)
-
-            # Convert NaN to None
             gd.df = gd.df.where(pd.notna(gd.df), None)
-            
             self.main_window.secondPageSetup()
 
         else:
@@ -69,7 +60,6 @@ class CSVPage(QWidget):
         table.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         table.setRowCount(gd.df.shape[0])
         table.setColumnCount(gd.df.shape[1]) 
-        # table.setHorizontalHeaderLabels(gd.df.columns.tolist())
         table.setStyleSheet(st.tableGrid) 
 
         # Populate Table

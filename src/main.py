@@ -5,21 +5,19 @@ import pages as pg
 import globaldata as gd
 
 
-
 class MainWindow(QMainWindow):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args,**kwargs) 
 
         self.setWindowTitle("CSV Quick Edit")
-        # self.setFixedSize(QSize(1000, 600))
         self.resize(QSize(1000, 600))
 
         # Stacked widget allows to switch between pages (widgets)
         self.mainwidget = QStackedWidget()
         self.setCentralWidget(self.mainwidget)
 
-        # If they open the app using "open with"
+        # If user opens the app using "open with"
         if gd.file_path:
             self.firstPageSetup(mark=1)
             self.secondPageSetup(gd.file_path)
@@ -27,10 +25,7 @@ class MainWindow(QMainWindow):
             self.firstPageSetup()
 
 
-
-
     def firstPageSetup(self, mark=None):
-        # May still need to be adjusted
         page1 = pg.FirstPage(self)
         self.mainwidget.addWidget(page1)
         if mark is None:
@@ -50,7 +45,6 @@ class MainWindow(QMainWindow):
 
     
     def closeEvent(self, event):
-        # print("Application closed")
         event.accept()
         
 
