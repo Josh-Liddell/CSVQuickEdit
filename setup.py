@@ -7,9 +7,14 @@ Usage:
 
 from setuptools import setup
 
-APP = ['CSVQuickEdit.py']
+APP = ['src/CSVQuickEdit.py']
 DATA_FILES = []
-OPTIONS = {}
+OPTIONS = {
+    'iconfile': 'assets/csv.icns',
+    'packages': ['PyQt5'],  # Ensures PyQt5 is included
+    'argv_emulation': True,  # Handles command-line arguments properly
+    'includes': ['sip'],  # Includes SIP module, which PyQt5 depends on
+}
 
 setup(
     app=APP,
