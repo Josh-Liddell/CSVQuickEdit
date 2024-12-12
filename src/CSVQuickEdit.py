@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QStackedWidget
 from PyQt5.QtCore import QSize
 import pages as pg
 import globaldata as gd
-
+import pandas as pd
 
 class MainWindow(QMainWindow):
 
@@ -20,7 +20,9 @@ class MainWindow(QMainWindow):
         # If user opens the app using "open with"
         if gd.file_path:
             self.firstPageSetup(mark=1)
-            self.secondPageSetup(gd.file_path)
+            gd.df = pd.read_csv(gd.file_path, dtype="object", keep_default_na=False, header=None)
+            gd.df = gd.df.where(pd.notna(gd.df), None)
+            self.secondPageSetup()
         else:
             self.firstPageSetup()
 
